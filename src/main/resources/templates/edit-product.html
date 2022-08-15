@@ -1,0 +1,75 @@
+<!DOCTYPE HTML>
+<html lang="en"  xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/fragments/basic}">
+<body>
+<div layout:fragment="content">
+
+    <div class="container my-5">
+        <h3> Edit Product</h3>
+        <div class="card">
+            <div class="card-body">
+                <div class="col-md-10">
+                    <form enctype="multipart/form-data" action="#"
+                          th:action="@{/productsView/{productId}(productId=${product.productId})}"
+                          th:object="${product}" method="post">
+                        <div class="row">
+
+                            <div class="form-group col-md-8">
+                                <label for="name" class="col-form-label">Name</label> <input type="text" th:field="*{productName}" class="form-control" id="name" placeholder="Name"> <span th:if="${#fields.hasErrors('productName')}" th:errors="*{productName}" class="text-danger"></span>
+                            </div>
+
+                            <div class="form-group col-md-8">
+                                <label for="productDesc" class="col-form-label">Description</label>
+                                <textarea  rows = "5" cols = "80" th:field="*{productDesc}" class="form-control" id="productDesc" placeholder="productDesc"/>
+                                <span th:if="${#fields.hasErrors('productDesc')}" th:errors="*{productDesc}" class="text-danger"></span>
+                            </div>
+
+
+
+                            <div class="form-group col-md-8">
+                                <label for="productPrice" class="col-form-label">Price</label>
+                                <input type="text" th:field="*{productPrice}" class="form-control" id="productPrice" placeholder="Price">
+                            </div>
+
+                            <div class="form-group col-md-8">
+                                <label for="productType" class="col-form-label">Type</label>
+                                <select id="productType" class="form-control" th:field="*{productType}">
+                                    <option th:each="option : ${productsList}" th:value="${option}" th:text="${option}"></option>
+                                </select>
+                            </div>
+
+
+                            <div class="form-group col-md-8">
+                                <label for="productOrder" class="col-form-label">Order</label>
+                                <input type="text" th:field="*{productOrder}" class="form-control" id="productOrder" placeholder="productOrder">
+                            </div>
+
+                            <div class="form-group col-md-8">
+                                <label for="file" class="col-form-label">Image</label>
+                                <input type="file" id="file" name="file" class="form-control-file">
+                            </div>
+
+
+                            <div class="col-md-6">
+                                <input type="submit" class="btn btn-primary" value="Save Product">
+                            </div>
+
+                            <div class="form-group col-md-8">
+
+                                <h2>
+                                    <span th:text="${errorMessage}"></span>
+                                </h2>
+
+                            </div>
+
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+
+</html>

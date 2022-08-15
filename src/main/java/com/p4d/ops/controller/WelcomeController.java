@@ -19,21 +19,30 @@ public class WelcomeController {
     private List<String> tasks = Arrays.asList("a", "b", "c", "d", "e", "f", "g1");
 
     @GetMapping("/")
-    public String main(Model model) {
-        model.addAttribute("message", message);
-        model.addAttribute("tasks", tasks);
-
-        return "welcome"; //view
+    public String index() {
+        return "index";
     }
+
+//    @GetMapping("/login")
+//    public String login() {
+//        return "/login";
+//    }
+//    @GetMapping("/")
+//    public String main(Model model) {
+//        model.addAttribute("message", message);
+//        model.addAttribute("tasks", tasks);
+//
+//        return "welcome"; //view
+//    }
 
     // /hello?name=kotlin
-    @GetMapping("/hello")
-    public String mainWithParam(
-            @RequestParam(name = "name", required = false, defaultValue = "")
-            String name, Model model) {
-
-        model.addAttribute("message", name);
-
-        return "welcome"; //view
-    }
+//    @GetMapping("/hello")
+//    public String mainWithParam(
+//            @RequestParam(name = "name", required = false, defaultValue = "")
+//            String name, Model model) {
+//
+//        model.addAttribute("message", name);
+//
+//        return "welcome"; //view
+//    }
 }

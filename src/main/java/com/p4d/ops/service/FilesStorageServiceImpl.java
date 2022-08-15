@@ -30,7 +30,7 @@ public class FilesStorageServiceImpl implements FilesStorageService{
     @Override
     public void save(MultipartFile file) {
         try {
-            awsS3Service.putObject(file);
+            awsS3Service.putObject(file,"home");
            // Files.copy(file.getInputStream(), this.root.resolve(file.getOriginalFilename()) , StandardCopyOption.REPLACE_EXISTING);
             //Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
         } catch (Exception e) {

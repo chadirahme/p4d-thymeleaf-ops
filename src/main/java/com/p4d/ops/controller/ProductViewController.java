@@ -1,6 +1,7 @@
 package com.p4d.ops.controller;
 
 import com.p4d.ops.models.Product;
+import com.p4d.ops.models.SearchModel;
 import com.p4d.ops.repository.ProductRepository;
 import com.p4d.ops.service.AwsS3Service;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,8 +13,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
+import java.util.List;
 
-@Controller
+//@Controller
 //@RequestMapping("/productsView/")
 public class ProductViewController {
 
@@ -22,12 +25,36 @@ public class ProductViewController {
 
     @Autowired
     ProductRepository productRepository;
+    @ModelAttribute("productsList")
+    public List<String> getProductsList() {
+        List<String> options = new ArrayList<String>();
+        options.add("Home");
+        options.add("Cakes");
+        options.add("Muffins");
+        return options;
+    }
 
     @GetMapping("/productsView")
-    public String showUpdateForm(Model model) {
-        model.addAttribute("products", productRepository.findAll());
+    public String showProductsView(Model model) {
+//        List<String> options = new ArrayList<String>();
+//        options.add("Home");
+//        options.add("Cakes");
+//        options.add("Muffins");
+//        model.addAttribute("options", options);
+//
+//        model.addAttribute("nameOfProduct" , options.get(1));
+        model.addAttribute("products", new ArrayList<>());
+        model.addAttribute("searchModel", new SearchModel());
         return "productsList";
     }
+
+    @PostMapping("/searchProduct")
+    public String searchProduct(Model model,SearchModel searchModel) {
+        model.addAttribute("products", productRepository.findByProductType(searchModel.getProductType()));
+        return "productsList";
+        //return "redirect:productsView";
+    }
+
 
     @GetMapping("/addProduct")
     public String addProduct(Product product) {
@@ -36,12 +63,25 @@ public class ProductViewController {
     }
 
     @PostMapping("/addProduct")
-    public String addStudent(@Valid Product product, BindingResult result, Model model) {
+    public String addStudent(@Valid Product product, BindingResult result, Model model,
+                             @RequestParam("file") MultipartFile file) {
         if (result.hasErrors()) {
             return "add-product";
         }
+        try {
+            if (file != null && file.getSize() > 0) {
+                awsS3Service.putObject(file,product.getProductType());
+                String fileName = StringUtils.cleanPath(file.getOriginalFilename());
+                product.setProductImage(fileName);
+            }
             productRepository.save(product);
-       // studentRepository.save(student);
+        }catch (Exception ex) {
+            String errorMessage = ex.getMessage();
+            // logger.error(errorMessage);
+            model.addAttribute("errorMessage", errorMessage);
+           // return "product";
+            return "add-product";
+        }
         return "redirect:productsView";
     }
 
@@ -90,19 +130,32 @@ public class ProductViewController {
         //return "redirect:productsView";
     }
 
+//    public String saveProduct(Model model,BindingResult result, @PathVariable Integer contactId,
+//                              @ModelAttribute("product") Product product,
+//                              @RequestParam("file") MultipartFile file)
     @PostMapping(value = {"/saveProduct/{contactId}/edit"})
-    public String saveProduct(Model model, @PathVariable Integer contactId,
-                              @ModelAttribute("product") Product product,
-                              @RequestParam("file") MultipartFile file) {
+    public String saveProduct(@Valid Product product, BindingResult result, Model model,
+                              @PathVariable Integer contactId,
+                             @RequestParam("file") MultipartFile file)
+    {
         try {
+            if (result.hasErrors()) {
+                //return "redirect:/editProduct/"+contactId;
+                model.addAttribute("allowDelete", false);
+                model.addAttribute("product", product);
+                //return "product";
+                return "add-product";
+            }
             Product productDB = productRepository.findById(contactId)
                     .orElseThrow(() -> new IllegalArgumentException("Invalid product Id:" + contactId));
             product.setProductId(contactId);
             // normalize the file path
             if(file!=null && file.getSize()>0) {
-                awsS3Service.putObject(file);
+                awsS3Service.putObject(file,product.getProductType());
                 String fileName = StringUtils.cleanPath(file.getOriginalFilename());
                 product.setProductImage(fileName);
+            }else {
+                product.setProductImage(productDB.getProductImage());
             }
 
             //productDB.setProductName(product.getProductName());

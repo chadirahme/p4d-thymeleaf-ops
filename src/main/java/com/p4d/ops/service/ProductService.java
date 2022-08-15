@@ -26,6 +26,11 @@ public class ProductService {
         return repo.findAll();
     }
 
+    public List<Product> listAllProductType(String type) {
+        return repo.findByProductType(type);
+    }
+
+
     public void save(Product product) {
         repo.save(product);
     }

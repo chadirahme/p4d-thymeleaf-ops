@@ -9,6 +9,7 @@ import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequestMapping("api")
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 public class ProductController {
 
@@ -18,6 +19,12 @@ public class ProductController {
     @GetMapping("/products")
     public List<Product> list() {
         return service.listAll();
+    }
+
+    //@GetMapping("/listAllProductType/{type}")
+    @GetMapping("/listAllProductType/{type}")
+    public List<Product> listAllProductType(@PathVariable String type){
+        return service.listAllProductType(type);
     }
 
     @GetMapping("/products/{id}")

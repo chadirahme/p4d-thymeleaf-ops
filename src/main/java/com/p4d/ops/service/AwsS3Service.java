@@ -51,7 +51,7 @@ public class AwsS3Service {
     }
 
     //https://www.section.io/engineering-education/spring-boot-amazon-s3/
-    public void putObject(MultipartFile file) throws IOException {
+    public void putObject(MultipartFile file,String type) throws IOException {
 
         //get file metadata
         Map<String, String> metadata = new HashMap<>();
@@ -79,7 +79,8 @@ public class AwsS3Service {
 //        }
        // PutObjectRequest request = new PutObjectRequest(bucketName, fileName, convFile);
         //String path = String.format("%s/%s", bucketName, UUID.randomUUID());
-        String path = String.format("%s/%s", bucketName,"assets/img/home");
+        String folderName="assets/img/"+type;
+        String path = String.format("%s/%s", bucketName,folderName);
 
         amazonS3.putObject(path, fileName, file.getInputStream(), objectMetadata);
       //  amazonS3.putObject(request);

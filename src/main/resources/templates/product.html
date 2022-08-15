@@ -1,13 +1,18 @@
 <!DOCTYPE HTML>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
+<head th:replace="fragments/header ::html_headtag">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <title>Spring Boot Thymeleaf Hello World Example</title>
+    <title>P4D-Edit Products</title>
 
-    <link rel="stylesheet" href="../webjars/bootstrap/4.2.1/css/bootstrap.min.css"/>
-    <link rel="stylesheet" href="../css/main.css"/>
+<!--    <link rel="stylesheet" href="../webjars/bootstrap/4.2.1/css/bootstrap.min.css"/>-->
+<!--    <link rel="stylesheet" href="../css/main.css"/>-->
+
+<!--    <link rel="stylesheet" th:href="@{../webjars/bootstrap/4.2.1/css/bootstrap.min.css}" type="text/css"/>-->
+<!--    <link rel="stylesheet" th:href="@{../css/main.css}" type="text/css"/>-->
+
+
 
 </head>
 
@@ -31,18 +36,25 @@
                         </div>
 
                         <div class="form-group col-md-8">
-                            <label for="productDesc" class="col-form-label">productDesc</label>
-                            <input type="text" th:field="*{productDesc}" class="form-control" id="productDesc" placeholder="productDesc">
+                            <label for="productDesc" class="col-form-label">Description</label>
+                            <textarea  rows = "5" cols = "80" th:field="*{productDesc}" class="form-control" id="productDesc" placeholder="productDesc"/>
                             <span th:if="${#fields.hasErrors('productDesc')}" th:errors="*{productDesc}" class="text-danger"></span>
                         </div>
 
                         <div class="form-group col-md-8">
-                            <label for="productType" class="col-form-label">product Type</label>
-                            <input type="text" th:field="*{productType}" class="form-control" id="productType" placeholder="productType">
+                            <label for="productType" class="col-form-label">Type</label>
+                            <select id="productType" class="form-control" th:field="*{productType}">
+                                <option th:each="option : ${productsList}" th:value="${option}" th:text="${option}"></option>
+                            </select>
                         </div>
 
+<!--                        <div class="form-group col-md-8">-->
+<!--                            <label for="productType" class="col-form-label">Type</label>-->
+<!--                            <input type="text" th:field="*{productType}" class="form-control" id="productType" placeholder="productType">-->
+<!--                        </div>-->
+
                         <div class="form-group col-md-8">
-                            <label for="productOrder" class="col-form-label">product Type</label>
+                            <label for="productOrder" class="col-form-label">Order</label>
                             <input type="text" th:field="*{productOrder}" class="form-control" id="productOrder" placeholder="productOrder">
                         </div>
 

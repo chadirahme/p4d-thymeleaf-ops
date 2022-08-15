@@ -32,12 +32,5 @@ spring:
 
 uploads: src/main/resources/static/uploads/
 
-amazon:
-  aws:
-    access-key:
-    secret-key:
-    region1: eu-west-2
-    region: ca-central-1
-    bucketName1:
-    bucketName:
+
 
